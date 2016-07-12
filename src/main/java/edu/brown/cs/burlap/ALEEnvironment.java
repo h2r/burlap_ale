@@ -1,6 +1,5 @@
 package edu.brown.cs.burlap;
 
-import burlap.mdp.core.Domain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
@@ -9,8 +8,8 @@ import edu.brown.cs.burlap.io.ALEDriver;
 import edu.brown.cs.burlap.io.Actions;
 import edu.brown.cs.burlap.io.RLData;
 import edu.brown.cs.burlap.movie.MovieGenerator;
-import org.bytedeco.javacpp.opencv_core.Mat;
 import edu.brown.cs.burlap.screen.ScreenConverter;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import java.io.IOException;
 
@@ -27,22 +26,20 @@ public class ALEEnvironment implements Environment {
     protected ScreenConverter screenConverter;
 
     /** State data **/
-    Domain domain;
     protected ALEState currentState;
     protected double lastReward;
     protected boolean isTerminal;
 
-    public ALEEnvironment(Domain domain, String alePath, String romPath) {
-        this(domain, alePath, romPath, 1);
+    public ALEEnvironment(String alePath, String romPath) {
+        this(alePath, romPath, 1);
     }
 
-    public ALEEnvironment(Domain domain, String alePath, String romPath, int frameSkip) {
+    public ALEEnvironment(String alePath, String romPath, int frameSkip) {
         // Create the relevant I/O objects
         initIO(alePath, romPath, frameSkip);
 
         screenConverter = new ScreenConverter();
 
-        this.domain = domain;
     }
 
     public void startRecording(String movieOutputFile) {
