@@ -135,7 +135,7 @@ public class ALEDriver {
 
     /** Returns the edu.brown.cs.burlap.screen matrix from ALE.
      *
-     * @return
+     * @return the matrix for the screen
      */
     public Mat getScreen() {
         return screen;
@@ -143,7 +143,7 @@ public class ALEDriver {
 
     /** Returns the RAM from ALE.
      *
-     * @return
+     * @return the RAM
      */
     public ConsoleRAM getRAM() {
         return ram;
@@ -158,7 +158,7 @@ public class ALEDriver {
     }
 
     /** A blocking method which will get the next time step from ALE.
-     *
+     * @return a boolean...
      */
     public boolean observe() {
         // Ensure that observe() is not called twice, as it will otherwise block
@@ -224,8 +224,8 @@ public class ALEDriver {
 
     /** After a call to observe(), send back the necessary action.
      *
-     * @param act
-     * @return
+     * @param act the code of the atari action to perform
+     * @return the result of {@link #observe()}
      */
     public boolean act(int act) {
         // Ensure that we called observe() last
@@ -241,7 +241,10 @@ public class ALEDriver {
         return observe();
     }
 
-    /** Helper function to send out an action to ALE */
+	/**
+     * Helper function to send out an action to ALE
+     * @param act the action code to execute
+     */
     public void sendAction(int act) {
         // Send player A's action, as well as the NOOP for player B
         // Format: <player_a_action>,<player_b_action>\n
@@ -249,9 +252,9 @@ public class ALEDriver {
         out.flush();
     }
 
-    /** Read in RL data from a given line.
-     *
-     * @param line
+    /**
+     * Read in RL data from a given line.
+     * @param line the line of data to parse
      */
     public void readRLData(String line) {
         // Parse RL data
@@ -263,7 +266,8 @@ public class ALEDriver {
         rlData.reward = Integer.parseInt(tokens[1]);
     }
 
-    /** Reads the console RAM from a string
+    /**
+     * Reads the console RAM from a string
      * @param line The RAM-part of the string sent by ALE.
      */
     public void readRam(String line) {
@@ -324,7 +328,10 @@ public class ALEDriver {
         return (hd << 4) + ld;
     }
 
-    /** Read in a run-length encoded edu.brown.cs.burlap.screen. ALE 0.3-0.4 */
+	/**
+     * Read in a run-length encoded edu.brown.cs.burlap.screen. ALE 0.3-0.4
+     * @param line the line of data to read
+     */
     public void readScreenRLE(String line) {
 
         BytePointer screenData = screen.data();

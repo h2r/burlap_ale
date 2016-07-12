@@ -21,7 +21,7 @@ import java.awt.*;
 
 /** Defines a palette of colors. Up to 256 entries. 0 is always black.
  *
- * @author Marc G. Bellemare <mgbellemare@ualberta.ca>
+ * @author Marc G. Bellemare mgbellemare@ualberta.ca
  */
 public abstract class ColorPalette {
     /** 256 colors in this palette */
@@ -36,7 +36,7 @@ public abstract class ColorPalette {
      *   choices are NTSC (128 colors) and SECAM (8 colors).
      *
      * @param paletteName The name of the palette (NTSC or SECAM).
-     * @return
+     * @return the {@link ColorPalette}
      */
     public static ColorPalette makePalette(String paletteName) {
         if (paletteName.equals("NTSC"))
@@ -47,8 +47,8 @@ public abstract class ColorPalette {
             throw new IllegalArgumentException("Invalid palette: "+paletteName);
     }
 
-    /** Create a new map, with entry #0 being black.
-     * 
+    /**
+     * Create a new map, with entry #0 being black.
      */
     public ColorPalette() {
         map = new Color[MAX_ENTRIES];
@@ -58,16 +58,17 @@ public abstract class ColorPalette {
 
     /** Returns how many entries are contained in this color map.
      * 
-     * @return
+     * @return how many entries are contained in this color map.
      */
     public int numEntries() {
         return this.numEntries;
     }
 
-    /** Adds Color c at index i.
-     *
+    /**
+     * Adds Color c at index i.
      * @param c Color
      * @param i index
+     * @return the previous {@link Color}
      */
     public Color set(Color c, int i) {
         Color oldColor = map[i];
@@ -80,8 +81,8 @@ public abstract class ColorPalette {
 
     /** Returns the color indexed by i, possibly null.
      * 
-     * @param i
-     * @return
+     * @param i index of the color
+     * @return the {@link Color}
      */
     public Color get(int i) {
         return map[i];
@@ -89,8 +90,8 @@ public abstract class ColorPalette {
     
     /** Returns whether palette index i has an associated color.
      * 
-     * @param i
-     * @return
+     * @param i the color index
+     * @return true if there is a color for that index
      */
     public boolean hasEntry(int i) {
         return (map[i] != null);

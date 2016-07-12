@@ -77,14 +77,20 @@ public class Actions {
     /** A HashMap mapping action names to action indices */
     public static HashMap<String,Integer> actionsMap;
 
-    /** Maps a given action name to its corresponding integer value */
+	/**
+     * Maps a given action name to its corresponding integer value
+     * @param actionName the name of hte action
+     * @return the ale action code
+     */
     public static int map(String actionName) {
         if (actionsMap == null) makeMap();
 
         return actionsMap.get(actionName).intValue();
     }
 
-    /** Construct the map from names to actions */
+	/**
+     * Construct the map from names to actions
+     */
     public static void makeMap() {
         actionsMap = new HashMap<String,Integer>();
         

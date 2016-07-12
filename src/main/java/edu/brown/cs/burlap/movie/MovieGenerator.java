@@ -25,7 +25,7 @@ import java.text.NumberFormat;
 
 /** A class for exporting edu.brown.cs.burlap.screen images to PNG files.
  *
- * @author Marc G. Bellemare <mgbellemare@ualberta.ca>
+ * @author Marc G. Bellemare mgbellemare@ualberta.ca
  */
 public class MovieGenerator {
     /** How many times to show the same image sequence before moving on to the next */
@@ -48,7 +48,7 @@ public class MovieGenerator {
      *   base filename is appended a frame number and ".png" in order to obtain
      *   the full filename.
      *
-     * @param baseFilename
+     * @param baseFilename the name/path of the file, except the extension and frame number
      */
     public MovieGenerator(String baseFilename) {
         this.baseFilename = baseFilename;
@@ -70,7 +70,7 @@ public class MovieGenerator {
     /** This method saves the given image to disk as the next frame. It then
      *   increments pngIndex.
      * 
-     * @param image
+     * @param image the image to record
      */
     public void record(BufferedImage image) {
         // We need a filename in order to save frames

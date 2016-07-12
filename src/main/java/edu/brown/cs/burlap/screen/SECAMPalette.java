@@ -22,7 +22,7 @@ import java.awt.*;
 /** This class defines the SECAM color palette. The entries in this class were
  *  taken from Stella.
  *
- * @author Marc G. Bellemare <mgbellemare@ualberta.ca>
+ * @author Marc G. Bellemare mgbellemare@ualberta.ca
  */
 public class SECAMPalette extends ColorPalette {
     // 8 unique colors, with odd indices being mapped to the color below

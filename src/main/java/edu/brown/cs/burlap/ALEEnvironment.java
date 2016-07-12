@@ -111,8 +111,11 @@ public class ALEEnvironment implements Environment {
         currentState = new ALEState(io.getScreen());
     }
 
-    /** Initialize the I/O object.
-     *
+	/**
+     * Initialize the I/O object.
+     * @param alePath path to ale executable directory
+     * @param romPath path to rom
+     * @param frameSkip number of frames that are skipped between action executions.
      */
     protected void initIO(String alePath, String romPath, int frameSkip) {
         io = null;

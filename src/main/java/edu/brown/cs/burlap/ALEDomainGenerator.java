@@ -39,7 +39,7 @@ public class ALEDomainGenerator implements DomainGenerator {
     }
 
 
-    /** Game specific action-subsets */
+    /* Game specific action-subsets */
     // Single Agent ALE Action Set
     public static String[] saActionSet() {
         return Arrays.copyOfRange(Actions.actionNames, 0, Actions.numPlayerActions);

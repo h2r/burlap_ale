@@ -126,9 +126,10 @@ public class KeyboardControl implements KeyListener {
         5, 13, -1, -1, 8, 16, -1, -1, 9, 17, -1, -1, -1, -1, -1, -1
     };
     
-    /** Converts the current keypresses to an ALE action (for player A).
-     * 
-     * @return
+
+	/**
+     * Converts the current keypresses to an ALE action (for player A).
+     * @return the ale action code
      */
     public int toALEAction() {
         int bitfield = 0;
