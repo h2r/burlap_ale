@@ -1,4 +1,4 @@
-package screen;
+package edu.brown.cs.burlap.screen;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.Java2DFrameConverter;

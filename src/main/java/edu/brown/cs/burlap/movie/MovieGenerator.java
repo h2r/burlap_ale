@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package movie;
+package edu.brown.cs.burlap.movie;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 
-/** A class for exporting screen images to PNG files.
+/** A class for exporting edu.brown.cs.burlap.screen images to PNG files.
  *
  * @author Marc G. Bellemare <mgbellemare@ualberta.ca>
  */

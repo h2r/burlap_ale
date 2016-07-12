@@ -1,4 +1,4 @@
-package burlap;
+package edu.brown.cs.burlap;
 
 /**
  * Created by MelRod on 3/12/16.

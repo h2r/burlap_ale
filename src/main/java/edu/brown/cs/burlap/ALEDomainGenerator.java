@@ -1,9 +1,9 @@
-package burlap;
+package edu.brown.cs.burlap;
 
 import burlap.mdp.auxiliary.DomainGenerator;
 import burlap.mdp.core.action.UniversalActionType;
 import burlap.mdp.singleagent.SADomain;
-import io.Actions;
+import edu.brown.cs.burlap.io.Actions;
 
 import java.util.Arrays;
 

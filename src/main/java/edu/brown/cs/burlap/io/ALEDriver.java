@@ -1,9 +1,9 @@
-package io;
+package edu.brown.cs.burlap.io;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.opencv_core.Mat;
-import screen.ColorPalette;
-import screen.NTSCPalette;
+import edu.brown.cs.burlap.screen.ColorPalette;
+import edu.brown.cs.burlap.screen.NTSCPalette;
 
 import java.awt.*;
 import java.io.*;
@@ -19,7 +19,7 @@ public class ALEDriver {
 
     protected Process process;
 
-    /** Data structure holding the screen image */
+    /** Data structure holding the edu.brown.cs.burlap.screen image */
     Mat screen;
     /** Data structure holding colors */
     ColorPalette colorPalette = new NTSCPalette();
@@ -99,7 +99,7 @@ public class ALEDriver {
      *
      */
     public void initPipes() throws IOException {
-        // Read in the width and height of the screen
+        // Read in the width and height of the edu.brown.cs.burlap.screen
         // Format: <width>-<height>\n
         String line = in.readLine();
         if (line == null) {
@@ -121,7 +121,7 @@ public class ALEDriver {
         rlData = new RLData();
 
         // Now send back our preferences
-        // Format: <wants-screen>,<wants-ram>,<frame-skip>,<wants-rldata>\n
+        // Format: <wants-edu.brown.cs.burlap.screen>,<wants-ram>,<frame-skip>,<wants-rldata>\n
         out.printf("%d,%d,%d,%d\n", updateScreen? 1:0, updateRam? 1:0, 1, updateRLData? 1:0);
         out.flush();
 
@@ -133,7 +133,7 @@ public class ALEDriver {
         return frameskip;
     }
 
-    /** Returns the screen matrix from ALE.
+    /** Returns the edu.brown.cs.burlap.screen matrix from ALE.
      *
      * @return
      */
@@ -189,7 +189,7 @@ public class ALEDriver {
         // Ignore blank lines (still send an action)
         if (line.length() > 0) {
             // The data format is:
-            // <ram-string>:<screen-string>:<rl-data-string>:\n
+            // <ram-string>:<edu.brown.cs.burlap.screen-string>:<rl-data-string>:\n
             //  Some of these elements may be missing, in which case the separating
             //  colons are not sent. For example, if we only want ram and rl data,
             //  the format is <ram>:<rl-data>:
@@ -203,7 +203,7 @@ public class ALEDriver {
                 readRam(tokens[tokenIndex++]);
             }
 
-            // Then update the screen
+            // Then update the edu.brown.cs.burlap.screen
             if (updateScreen) {
                 String screenString = tokens[tokenIndex++];
 
@@ -280,10 +280,10 @@ public class ALEDriver {
         }
     }
 
-    /** Reads the screen matrix update from a string. The string only contains the
+    /** Reads the edu.brown.cs.burlap.screen matrix update from a string. The string only contains the
      *   pixels that differ from the previous frame.
      *
-     * @param line The screen part of the string sent by ALE.
+     * @param line The edu.brown.cs.burlap.screen part of the string sent by ALE.
      */
     public void readScreenMatrix(String line) {
         BytePointer screenData = screen.data();
@@ -324,7 +324,7 @@ public class ALEDriver {
         return (hd << 4) + ld;
     }
 
-    /** Read in a run-length encoded screen. ALE 0.3-0.4 */
+    /** Read in a run-length encoded edu.brown.cs.burlap.screen. ALE 0.3-0.4 */
     public void readScreenRLE(String line) {
 
         BytePointer screenData = screen.data();

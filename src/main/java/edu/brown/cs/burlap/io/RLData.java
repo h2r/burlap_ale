@@ -15,18 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io;
+package edu.brown.cs.burlap.io;
 
-/** This class encapsulates RAM data.
+/** This class encapsulates RL data.
  *
  * @author Marc G. Bellemare
  */
-public class ConsoleRAM {
-    public static final int RAM_SIZE = 128;
-
-    public int[] ram;
-
-    public ConsoleRAM() {
-        ram = new int[RAM_SIZE];
-    }
+public class RLData {
+    /** How much reward was received */
+    public int reward;
+    /** Indicates the end of an episode */
+    public boolean isTerminal;
 }

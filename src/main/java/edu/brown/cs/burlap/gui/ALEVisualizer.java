@@ -1,10 +1,10 @@
-package gui;
+package edu.brown.cs.burlap.gui;
 
-import burlap.ALEState;
+import edu.brown.cs.burlap.ALEState;
 import burlap.mdp.core.state.State;
 import burlap.visualizer.StatePainter;
 import burlap.visualizer.Visualizer;
-import screen.ScreenConverter;
+import edu.brown.cs.burlap.screen.ScreenConverter;
 
 import java.awt.*;
 

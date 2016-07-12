@@ -1,4 +1,4 @@
-package burlap;
+package edu.brown.cs.burlap;
 
 import burlap.mdp.core.state.State;
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -23,7 +23,7 @@ public class ALEState implements State {
 
     @Override
     public List<Object> variableKeys() {
-        return Collections.singletonList((Object) "screen");
+        return Collections.singletonList((Object) "edu/brown/cs/burlap/screen");
     }
 
     @Override

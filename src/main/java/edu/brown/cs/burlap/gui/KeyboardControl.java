@@ -15,9 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gui;
+package edu.brown.cs.burlap.gui;
 
-import io.Actions;
+import edu.brown.cs.burlap.io.Actions;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

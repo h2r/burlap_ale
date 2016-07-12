@@ -1,7 +1,7 @@
-package burlap;
+package edu.brown.cs.burlap;
 
 import burlap.mdp.core.action.Action;
-import io.Actions;
+import edu.brown.cs.burlap.io.Actions;
 
 /**
  * Created by maroderi on 7/11/16.

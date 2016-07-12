@@ -1,16 +1,16 @@
-package burlap;
+package edu.brown.cs.burlap;
 
 import burlap.mdp.core.Domain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
-import io.ALEDriver;
-import io.Actions;
-import io.RLData;
-import movie.MovieGenerator;
+import edu.brown.cs.burlap.io.ALEDriver;
+import edu.brown.cs.burlap.io.Actions;
+import edu.brown.cs.burlap.io.RLData;
+import edu.brown.cs.burlap.movie.MovieGenerator;
 import org.bytedeco.javacpp.opencv_core.Mat;
-import screen.ScreenConverter;
+import edu.brown.cs.burlap.screen.ScreenConverter;
 
 import java.io.IOException;
 
@@ -50,7 +50,7 @@ public class ALEEnvironment implements Environment {
     }
 
     protected void recordScreen(Mat screen) {
-        // Save screen capture
+        // Save edu.brown.cs.burlap.screen capture
         if (movieGenerator != null) {
             movieGenerator.record(screenConverter.convert(screen));
         }
@@ -77,7 +77,7 @@ public class ALEEnvironment implements Environment {
             throw new RuntimeException("ALE FIFO stream closed");
         }
 
-        // Obtain the screen matrix
+        // Obtain the edu.brown.cs.burlap.screen matrix
         Mat screen = io.getScreen();
 
         // Get RLData
@@ -88,7 +88,7 @@ public class ALEEnvironment implements Environment {
         isTerminal = rlData.isTerminal;
         currentState = new ALEState(screen);
 
-        // Record Screen for movie
+        // Record Screen for edu.brown.cs.burlap.movie
         recordScreen(screen);
 
         return new EnvironmentOutcome(startState, a, currentState, lastReward, isInTerminalState());

@@ -1,9 +1,7 @@
-package gui;
+package edu.brown.cs.burlap.gui;
 
-import burlap.ALEAction;
-import burlap.ALEDomainConstants;
-import burlap.ALEDomainGenerator;
-import burlap.ALEEnvironment;
+import edu.brown.cs.burlap.ALEAction;
+import edu.brown.cs.burlap.ALEDomainConstants;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.shell.visual.VisualExplorer;

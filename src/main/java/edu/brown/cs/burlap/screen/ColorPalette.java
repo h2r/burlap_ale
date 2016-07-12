@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package screen;
+package edu.brown.cs.burlap.screen;
 
 import java.awt.*;
 
@@ -27,12 +27,12 @@ public abstract class ColorPalette {
     /** 256 colors in this palette */
     public static final int MAX_ENTRIES = 256;
 
-    /** A map of screen indices to RGB colors. */
+    /** A map of edu.brown.cs.burlap.screen indices to RGB colors. */
     protected Color[] map;
     /** How many entries our map contains. */
     protected int numEntries;
 
-    /** Create a color palette used to display the screen. The currently available
+    /** Create a color palette used to display the edu.brown.cs.burlap.screen. The currently available
      *   choices are NTSC (128 colors) and SECAM (8 colors).
      *
      * @param paletteName The name of the palette (NTSC or SECAM).
