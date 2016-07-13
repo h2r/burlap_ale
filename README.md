@@ -78,26 +78,25 @@ public class RandomAgent {
         // Create the ALE domain
         ALEDomainGenerator domGen = new ALEDomainGenerator();
         SADomain domain = domGen.generateDomain();
-        
+
         // Create the environment
         ALEEnvironment env = new ALEEnvironment(alePath, romPath);
-        
+
         // Create and initialize the visualizer
         ALEVisualExplorer exp = new ALEVisualExplorer(domain, env, ALEVisualizer.create());
         exp.initGUI();
-        
+
         // Refresh the visualizer at 60Hz
         exp.startLiveStatePolling(1000/60);
-        
-        // Initialize the policy
-        Policy policy = new RandomPolicy(domain);
 
-        while(true){
+        // Initialize the policy
+        Policy p = new RandomPolicy(domain);
+
+        // Run the policy indefinitely
+        while(true) {
             PolicyUtils.rollout(p, env);
             env.resetEnvironment();
         }
     }
-
-  
 }
 ```
