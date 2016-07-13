@@ -92,30 +92,12 @@ public class RandomAgent {
         // Initialize the policy
         Policy policy = new RandomPolicy(domain);
 
-        // Run 100 episodes
-        int numEpisodes = 100;
-        for (int i = 0; i < numEpisodes; i++) {
-            runEpisode(env, policy, -1);
+        while(true){
+            PolicyUtils.rollout(p, env);
+            env.resetEnvironment();
         }
     }
 
-    // Run a single episode in Environment env with Policy policy
-    public static Episode runEpisode(Environment env, Policy policy, int maxEpisodeFrames) {
-        env.resetEnvironment();
-        Episode e = new Episode();
-
-        int eFrameCounter = 0;
-        while (!env.isInTerminalState() && (eFrameCounter < maxEpisodeFrames || maxEpisodeFrames == -1)) {
-            State curState = env.currentObservation();
-            Action action = policy.action(curState);
-
-            EnvironmentOutcome eo = env.executeAction(action);
-            e.transition(eo.a, eo.op, eo.r);
-
-            eFrameCounter++;
-        }
-
-        return e;
-    }
+  
 }
 ```
