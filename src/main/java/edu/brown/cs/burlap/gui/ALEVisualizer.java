@@ -11,15 +11,17 @@ import java.awt.*;
 /**
  * Created by maroderi on 7/11/16.
  */
-public class ALEVisualizer extends Visualizer {
+public class ALEVisualizer {
 
-    public ALEVisualizer() {
-        super();
+    private ALEVisualizer() {}
 
-        addStatePainter(new ALEStatePainter());
+    public static Visualizer create() {
+        Visualizer vis = new Visualizer();
+        vis.addStatePainter(new ALEStatePainter());
+        return vis;
     }
 
-    class ALEStatePainter implements StatePainter {
+    static class ALEStatePainter implements StatePainter {
 
         ScreenConverter screenConverter = new ScreenConverter();
 
