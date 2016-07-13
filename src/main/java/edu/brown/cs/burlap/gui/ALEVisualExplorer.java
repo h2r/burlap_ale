@@ -22,6 +22,10 @@ public class ALEVisualExplorer extends VisualExplorer {
 
     protected KeyboardControl keyboardControl;
 
+    public ALEVisualExplorer(SADomain domain, Environment env, Visualizer painter) {
+        this(domain, env, painter, false);
+    }
+
     public ALEVisualExplorer(SADomain domain, Environment env, Visualizer painter, boolean human) {
         super(domain, env, painter,
                 (int)(ALEDomainConstants.ALEScreenWidth * widthRatio),
