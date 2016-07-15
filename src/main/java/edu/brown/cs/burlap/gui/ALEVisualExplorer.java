@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
  */
 public class ALEVisualExplorer extends VisualExplorer {
 
-    protected final int humanFPS = 60/4;
+    protected final int humanFPS = 60;
     protected static final float widthRatio = 6f;
     protected static final float heightRatio = 3f;
 
