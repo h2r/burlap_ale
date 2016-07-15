@@ -1,12 +1,14 @@
 package edu.brown.cs.burlap.io;
 
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.opencv_core.Mat;
 import edu.brown.cs.burlap.screen.ColorPalette;
 import edu.brown.cs.burlap.screen.NTSCPalette;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 
@@ -17,6 +19,11 @@ public class ALEDriver {
 
     static final String ALE_ERROR_FILE = "ale_err.txt";
 
+    /** File paths for the ale executable and the rom file */
+    protected final String alePath;
+    protected final String romPath;
+
+    /** The ale process */
     protected Process process;
 
     /** Data structure holding the edu.brown.cs.burlap.screen image */
@@ -31,14 +38,19 @@ public class ALEDriver {
     protected boolean terminateRequested;
 
     /** Input object */
-    protected final BufferedReader in;
+    protected BufferedReader in;
     /** Output object */
-    protected final PrintStream out;
+    protected PrintStream out;
 
     /** Flags indicating the kind of data we want to receive from ALE */
-    protected boolean updateScreen, updateRam, updateRLData;
+    protected boolean updateScreen = true;
+    protected boolean updateRam = true;
+    protected boolean updateRLData = false;
     /** We will request that ALE sends data every 'frameskip' frames. */
-    protected int frameskip;
+    protected int frameskip = 1;
+
+    /** Path of the directory to put the screen recordings */
+    protected String recordScreenDir;
 
     /** The action we send for player B (always noop in this case) */
     protected final int playerBAction = Actions.map("player_b_noop");
@@ -48,31 +60,9 @@ public class ALEDriver {
 
     protected boolean useRLE = true;
 
-    public ALEDriver(String alePath, String rom) {
-        this(alePath, rom, 1);
-    }
-
-    public ALEDriver(String alePath, String rom, int frameskip) {
-        this.frameskip = frameskip;
-        startALE(alePath, rom);
-
-        in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        out = new PrintStream(new BufferedOutputStream(process.getOutputStream()));
-    }
-
-    private void startALE(String alePath, String romPath) {
-        ProcessBuilder pb = new ProcessBuilder(
-                alePath,
-                "-game_controller", "fifo",
-                "-frame_skip", Integer.toString(frameskip),
-                romPath)
-                .redirectError(new File(ALE_ERROR_FILE));
-
-        try {
-            process = pb.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ALEDriver(String alePath, String romPath) {
+        this.alePath = alePath;
+        this.romPath = romPath;
     }
 
     /** Closes the I/O channel.
@@ -94,11 +84,22 @@ public class ALEDriver {
         this.updateRLData = updateRL;
     }
 
-    /** A blocking method that sends initial information to ALE. See the
-     *   documentation for protocol details.
-     *
+    public void setFrameskip(int frameskip) {
+        this.frameskip = frameskip;
+    }
+
+    public void setRecordScreenDir(String recordScreenDir) {
+        this.recordScreenDir = recordScreenDir;
+    }
+
+    /**
+     *  A blocking method that initialized ALE.
      */
-    public void initPipes() throws IOException {
+    public void initALE() throws IOException {
+
+        // Start the ale executable
+        execALE();
+
         // Read in the width and height of the edu.brown.cs.burlap.screen
         // Format: <width>-<height>\n
         String line = in.readLine();
@@ -127,6 +128,40 @@ public class ALEDriver {
 
         // Initial observe
         observe();
+    }
+
+    private void execALE() {
+        List<String> command = new ArrayList<>();
+        command.add(alePath);
+
+        command.add("-game_controller");
+        command.add("fifo");
+
+        command.add("-frame_skip");
+        command.add(Integer.toString(frameskip));
+
+        command.add("-repeat_action_probability");
+        command.add("0");
+
+        if (recordScreenDir != null) {
+            command.add("-record_screen_dir");
+            command.add(recordScreenDir);
+        }
+
+        command.add(romPath);
+
+        ProcessBuilder pb = (new ProcessBuilder()).command(command).redirectError(new File(ALE_ERROR_FILE));
+
+        try {
+            process = pb.start();
+
+            in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            out = new PrintStream(new BufferedOutputStream(process.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            throw new RuntimeException("Failed to start ALE. See 'ale_err.txt' for more info");
+        }
     }
 
     public int getFrameSkip() {

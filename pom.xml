@@ -12,6 +12,33 @@
         <burlap.version>3.0.0</burlap.version>
     </properties>
 
+    <name>burlap_ale</name>
+    <description>A BURLAP library extension for interacting with the Arcade Learning Environment (ALE).</description>
+    <url>https://github.com/h2r/burlap_ale</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Melrose Roderick</name>
+            <email>melrose_roderick@brown.edu</email>
+            <organization>Brown University</organization>
+            <organizationUrl>http://www.brown.edu</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:h2r/burlap_ale</connection>
+        <developerConnection>scm:git:git@github.com:h2r/burlap_ale</developerConnection>
+        <url>git@github.com:h2r/burlap_ale</url>
+    </scm>
+
+
     <dependencies>
         <dependency>
             <groupId>edu.brown.cs.burlap</groupId>

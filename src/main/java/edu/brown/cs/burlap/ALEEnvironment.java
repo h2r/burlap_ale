@@ -7,7 +7,6 @@ import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import edu.brown.cs.burlap.io.ALEDriver;
 import edu.brown.cs.burlap.io.Actions;
 import edu.brown.cs.burlap.io.RLData;
-import edu.brown.cs.burlap.movie.MovieGenerator;
 import edu.brown.cs.burlap.screen.ScreenConverter;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
@@ -18,10 +17,8 @@ import java.io.IOException;
  */
 public class ALEEnvironment implements Environment {
 
-    MovieGenerator movieGenerator;
-
     /** The I/O object used to communicate with ALE */
-    private ALEDriver io;
+    protected ALEDriver io;
 
     protected ScreenConverter screenConverter;
 
@@ -35,22 +32,14 @@ public class ALEEnvironment implements Environment {
     }
 
     public ALEEnvironment(String alePath, String romPath, int frameSkip) {
+        this(alePath, romPath, frameSkip, null);
+    }
+
+    public ALEEnvironment(String alePath, String romPath, int frameSkip, String recordScreenDir) {
         // Create the relevant I/O objects
-        initIO(alePath, romPath, frameSkip);
+        initIO(alePath, romPath, frameSkip, recordScreenDir);
 
         screenConverter = new ScreenConverter();
-
-    }
-
-    public void startRecording(String movieOutputFile) {
-        movieGenerator = new MovieGenerator(movieOutputFile);
-    }
-
-    protected void recordScreen(Mat screen) {
-        // Save edu.brown.cs.burlap.screen capture
-        if (movieGenerator != null) {
-            movieGenerator.record(screenConverter.convert(screen));
-        }
     }
 
     @Override
@@ -85,9 +74,6 @@ public class ALEEnvironment implements Environment {
         isTerminal = rlData.isTerminal;
         currentState = new ALEState(screen);
 
-        // Record Screen for edu.brown.cs.burlap.movie
-        recordScreen(screen);
-
         return new EnvironmentOutcome(startState, a, currentState, lastReward, isInTerminalState());
     }
 
@@ -116,19 +102,22 @@ public class ALEEnvironment implements Environment {
      * @param alePath path to ale executable directory
      * @param romPath path to rom
      * @param frameSkip number of frames that are skipped between action executions.
+     * @param recordScreenDir the directory in which to save the screens
      */
-    protected void initIO(String alePath, String romPath, int frameSkip) {
+    protected void initIO(String alePath, String romPath, int frameSkip, String recordScreenDir) {
         io = null;
 
         try {
             // Initialize the pipes; use named pipes if requested
-            io = new ALEDriver(alePath, romPath, frameSkip);
+            io = new ALEDriver(alePath, romPath);
 
             // Determine which information to request from ALE
             io.setUpdateScreen(true);
             io.setUpdateRL(true);
             io.setUpdateRam(false);
-            io.initPipes();
+            io.setFrameskip(frameSkip);
+            io.setRecordScreenDir(recordScreenDir);
+            io.initALE();
         }
         catch (IOException e) {
             System.err.println ("Could not initialize pipes: "+e.getMessage());

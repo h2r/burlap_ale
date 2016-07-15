@@ -1,11 +1,11 @@
 package edu.brown.cs.burlap.gui;
 
-import edu.brown.cs.burlap.ALEAction;
-import edu.brown.cs.burlap.ALEDomainConstants;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.shell.visual.VisualExplorer;
 import burlap.visualizer.Visualizer;
+import edu.brown.cs.burlap.ALEAction;
+import edu.brown.cs.burlap.ALEDomainConstants;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
  */
 public class ALEVisualExplorer extends VisualExplorer {
 
-    protected final int humanFPS = 60;
+    protected final int humanFPS = 60/4;
     protected static final float widthRatio = 6f;
     protected static final float heightRatio = 3f;
 
