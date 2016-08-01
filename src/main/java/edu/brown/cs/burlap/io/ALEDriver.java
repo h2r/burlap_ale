@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
+import static org.bytedeco.javacpp.opencv_core.addWeighted;
+import static org.bytedeco.javacpp.opencv_core.max;
 
 /**
  * Created by MelRod on 5/23/16.
@@ -28,6 +30,15 @@ public class ALEDriver {
 
     /** Data structure holding the edu.brown.cs.burlap.screen image */
     Mat screen;
+    /** Data structure holding the raw frame data. If pooling != 0, pool over these frames **/
+    Mat frameA;
+    Mat frameB;
+    PoolingMethod poolingMethod = PoolingMethod.POOLING_METHOD_MEAN;
+    public enum PoolingMethod {
+        POOLING_METHOD_NONE,
+        POOLING_METHOD_MAX,
+        POOLING_METHOD_MEAN
+    }
     /** Data structure holding colors */
     ColorPalette colorPalette = new NTSCPalette();
     /** Data structure holding the RAM data */
@@ -92,6 +103,10 @@ public class ALEDriver {
         this.recordScreenDir = recordScreenDir;
     }
 
+    public void setPoolingMethod(PoolingMethod poolingMethod) {
+        this.poolingMethod = poolingMethod;
+    }
+
     /**
      *  A blocking method that initialized ALE.
      */
@@ -127,7 +142,7 @@ public class ALEDriver {
         out.flush();
 
         // Initial observe
-        observe();
+        observe(null);
     }
 
     private void execALE() {
@@ -138,10 +153,13 @@ public class ALEDriver {
         command.add("fifo");
 
         command.add("-frame_skip");
-        command.add(Integer.toString(frameskip));
+        command.add("0");
 
         command.add("-repeat_action_probability");
         command.add("0");
+
+        command.add("-disable_color_averaging");
+        command.add("true");
 
         if (recordScreenDir != null) {
             command.add("-record_screen_dir");
@@ -195,7 +213,7 @@ public class ALEDriver {
     /** A blocking method which will get the next time step from ALE.
      * @return a boolean...
      */
-    public boolean observe() {
+    public boolean observe(Mat outputFrame) {
         // Ensure that observe() is not called twice, as it will otherwise block
         //  as both ALE and the agent wait for data.
         if (hasObserved) {
@@ -242,10 +260,12 @@ public class ALEDriver {
             if (updateScreen) {
                 String screenString = tokens[tokenIndex++];
 
-                if (useRLE)
-                    readScreenRLE(screenString);
-                else
-                    readScreenMatrix(screenString);
+                if (outputFrame != null) {
+                    if (useRLE)
+                        readScreenRLE(screenString, outputFrame);
+                    else
+                        readScreenMatrix(screenString, outputFrame);
+                }
             }
 
             // Finally obtain RL data
@@ -260,7 +280,7 @@ public class ALEDriver {
     /** After a call to observe(), send back the necessary action.
      *
      * @param act the code of the atari action to perform
-     * @return the result of {@link #observe()}
+     * @return a boolean indicating if ALE has closed.
      */
     public boolean act(int act) {
         // Ensure that we called observe() last
@@ -270,10 +290,57 @@ public class ALEDriver {
         else
             hasObserved = false;
 
-        sendAction(act);
+        boolean err = false;
+        if (frameskip <= 1) {
+            // Swap frameA and B
+            Mat frameC = frameA;
+            frameA = frameB;
+            frameB = frameC;
 
-        // Record the new data
-        return observe();
+            sendAction(act);
+            err |= observe(frameA);
+        } else {
+            RLData rlData = new RLData();
+            for (int f = 0; f < frameskip - 2; f++) {
+                err |= actHelper(act, null, rlData);
+            }
+            err |= actHelper(act, frameB, rlData);
+            err |= actHelper(act, frameA, rlData);
+
+            this.rlData = rlData;
+        }
+
+        poolFrames();
+        return err;
+    }
+
+    private boolean actHelper(int act, Mat frame, RLData rlData) {
+        boolean err;
+
+        sendAction(act); hasObserved = false;
+        err = observe(frame);
+        rlData.reward += this.rlData.reward;
+        rlData.isTerminal |= this.rlData.isTerminal;
+
+        return err;
+    }
+
+    protected void poolFrames() {
+        if (frameB == null) {
+            screen = frameA;
+            return;
+        }
+        switch (poolingMethod) {
+            case POOLING_METHOD_NONE:
+                screen = frameA;
+                break;
+            case POOLING_METHOD_MAX:
+                max(frameA, frameB, screen);
+                break;
+            case POOLING_METHOD_MEAN:
+                addWeighted(frameA, 0.5, frameB, 0.5, 0, screen);
+                break;
+        }
     }
 
 	/**
@@ -324,17 +391,17 @@ public class ALEDriver {
      *
      * @param line The edu.brown.cs.burlap.screen part of the string sent by ALE.
      */
-    public void readScreenMatrix(String line) {
-        BytePointer screenData = screen.data();
+    public void readScreenMatrix(String line, Mat frame) {
+        BytePointer screenData = frame.data();
         int position = 0;
 
-        byte[] buffer = new byte[screen.rows() * screen.cols() * screen.channels()];
+        byte[] buffer = new byte[frame.rows() * frame.cols() * frame.channels()];
 
         int ptr = 0;
 
         // 0.3 protocol - send everything
-        for (int y = 0; y < screen.rows(); y++)
-            for (int x = 0; x < screen.cols(); x++) {
+        for (int y = 0; y < frame.rows(); y++)
+            for (int x = 0; x < frame.cols(); x++) {
                 int v = byteAt(line, ptr);
 
                 Color c = colorPalette.get(v);
@@ -367,12 +434,12 @@ public class ALEDriver {
      * Read in a run-length encoded edu.brown.cs.burlap.screen. ALE 0.3-0.4
      * @param line the line of data to read
      */
-    public void readScreenRLE(String line) {
+    public void readScreenRLE(String line, Mat frame) {
 
-        BytePointer screenData = screen.data();
+        BytePointer screenData = frame.data();
         int position = 0;
 
-        byte[] buffer = new byte[screen.rows() * screen.cols() * screen.channels()];
+        byte[] buffer = new byte[frame.rows() * frame.cols() * frame.channels()];
 
         int ptr = 0;
 

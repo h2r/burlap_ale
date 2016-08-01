@@ -10,6 +10,9 @@ import edu.brown.cs.burlap.io.RLData;
 import edu.brown.cs.burlap.screen.ScreenConverter;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
+import edu.brown.cs.burlap.io.ALEDriver.PoolingMethod;
+import static edu.brown.cs.burlap.io.ALEDriver.PoolingMethod.*;
+
 import java.io.IOException;
 
 /**
@@ -32,12 +35,12 @@ public class ALEEnvironment implements Environment {
     }
 
     public ALEEnvironment(String alePath, String romPath, int frameSkip) {
-        this(alePath, romPath, frameSkip, null);
+        this(alePath, romPath, frameSkip, POOLING_METHOD_NONE, null);
     }
 
-    public ALEEnvironment(String alePath, String romPath, int frameSkip, String recordScreenDir) {
+    public ALEEnvironment(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod, String recordScreenDir) {
         // Create the relevant I/O objects
-        initIO(alePath, romPath, frameSkip, recordScreenDir);
+        initIO(alePath, romPath, frameSkip, poolingMethod, recordScreenDir);
 
         screenConverter = new ScreenConverter();
     }
@@ -99,12 +102,13 @@ public class ALEEnvironment implements Environment {
 
 	/**
      * Initialize the I/O object.
-     * @param alePath path to ale executable directory
-     * @param romPath path to rom
+     * @param alePath path to ale executable directory.
+     * @param romPath path to rom.
      * @param frameSkip number of frames that are skipped between action executions.
-     * @param recordScreenDir the directory in which to save the screens
+     * @param poolingMethod the pooling method consecutive frames.
+     * @param recordScreenDir the directory in which to save the screens.
      */
-    protected void initIO(String alePath, String romPath, int frameSkip, String recordScreenDir) {
+    protected void initIO(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod, String recordScreenDir) {
         io = null;
 
         try {
