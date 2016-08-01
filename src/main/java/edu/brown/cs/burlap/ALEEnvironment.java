@@ -10,10 +10,11 @@ import edu.brown.cs.burlap.io.RLData;
 import edu.brown.cs.burlap.screen.ScreenConverter;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
-import edu.brown.cs.burlap.io.ALEDriver.PoolingMethod;
-import static edu.brown.cs.burlap.io.ALEDriver.PoolingMethod.*;
+import edu.brown.cs.burlap.io.PoolingMethod;
 
 import java.io.IOException;
+
+import static edu.brown.cs.burlap.io.PoolingMethod.*;
 
 /**
  * @author Melrose Roderick
@@ -31,11 +32,11 @@ public class ALEEnvironment implements Environment {
     protected boolean isTerminal;
 
     public ALEEnvironment(String alePath, String romPath) {
-        this(alePath, romPath, 1);
+        this(alePath, romPath, 1, POOLING_METHOD_NONE);
     }
 
-    public ALEEnvironment(String alePath, String romPath, int frameSkip) {
-        this(alePath, romPath, frameSkip, POOLING_METHOD_NONE, null);
+    public ALEEnvironment(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod) {
+        this(alePath, romPath, frameSkip, poolingMethod, null);
     }
 
     public ALEEnvironment(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod, String recordScreenDir) {
@@ -120,6 +121,7 @@ public class ALEEnvironment implements Environment {
             io.setUpdateRL(true);
             io.setUpdateRam(false);
             io.setFrameskip(frameSkip);
+            io.setPoolingMethod(poolingMethod);
             io.setRecordScreenDir(recordScreenDir);
             io.initALE();
         }

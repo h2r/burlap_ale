@@ -33,12 +33,7 @@ public class ALEDriver {
     /** Data structure holding the raw frame data. If pooling != 0, pool over these frames **/
     Mat frameA;
     Mat frameB;
-    PoolingMethod poolingMethod = PoolingMethod.POOLING_METHOD_MEAN;
-    public enum PoolingMethod {
-        POOLING_METHOD_NONE,
-        POOLING_METHOD_MAX,
-        POOLING_METHOD_MEAN
-    }
+    PoolingMethod poolingMethod = PoolingMethod.POOLING_METHOD_NONE;
     /** Data structure holding colors */
     ColorPalette colorPalette = new NTSCPalette();
     /** Data structure holding the RAM data */
@@ -133,6 +128,8 @@ public class ALEDriver {
 
         // Create the data structures used to store received information
         screen = new Mat(height, width, CV_8UC3);
+        frameA = new Mat(height, width, CV_8UC3);
+        frameB = new Mat(height, width, CV_8UC3);
         ram = new ConsoleRAM();
         rlData = new RLData();
 

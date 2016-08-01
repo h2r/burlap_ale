@@ -80,7 +80,7 @@ public class RandomAgent {
         SADomain domain = domGen.generateDomain();
 
         // Create the environment
-        ALEEnvironment env = new ALEEnvironment(alePath, romPath);
+        ALEEnvironment env = new ALEEnvironment(alePath, romPath, 4, PoolingMethod.POOLING_METHOD_MAX);
 
         // Create and initialize the visualizer
         ALEVisualExplorer exp = new ALEVisualExplorer(domain, env, ALEVisualizer.create());
