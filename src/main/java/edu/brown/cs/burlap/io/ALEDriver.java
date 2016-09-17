@@ -15,7 +15,9 @@ import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.max;
 
 /**
- * Created by MelRod on 5/23/16.
+ * A driver for interacting with ALE over the PIPE interface.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEDriver {
 

@@ -1,7 +1,9 @@
 package edu.brown.cs.burlap;
 
 /**
- * Created by MelRod on 3/12/16.
+ * A utility class for storing ALE-specific information.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEDomainConstants {
     // Constants

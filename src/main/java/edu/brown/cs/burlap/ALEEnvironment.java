@@ -7,7 +7,6 @@ import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import edu.brown.cs.burlap.io.ALEDriver;
 import edu.brown.cs.burlap.io.Actions;
 import edu.brown.cs.burlap.io.RLData;
-import edu.brown.cs.burlap.screen.ScreenConverter;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
 import edu.brown.cs.burlap.io.PoolingMethod;
@@ -17,14 +16,14 @@ import java.io.IOException;
 import static edu.brown.cs.burlap.io.PoolingMethod.*;
 
 /**
- * @author Melrose Roderick
+ * A BURLAP Environment for interfacing with ALE.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEEnvironment implements Environment {
 
     /** The I/O object used to communicate with ALE */
     protected ALEDriver io;
-
-    protected ScreenConverter screenConverter;
 
     /** State data **/
     protected ALEState currentState;
@@ -46,8 +45,6 @@ public class ALEEnvironment implements Environment {
     public ALEEnvironment(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod, String recordScreenDir) {
         // Create the relevant I/O objects
         initIO(alePath, romPath, frameSkip, poolingMethod, recordScreenDir);
-
-        screenConverter = new ScreenConverter();
     }
 
     @Override

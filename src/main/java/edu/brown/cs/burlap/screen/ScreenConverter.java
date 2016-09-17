@@ -7,18 +7,15 @@ import org.bytedeco.javacv.OpenCVFrameConverter;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by maroderi on 6/23/16.
+ * A utility class for converting between an OpenCV matrix of a Atari screen and a Buffered Image.
+ *
+ * @author Melrose Roderick.
  */
 public class ScreenConverter {
-    protected OpenCVFrameConverter.ToMat frameConverter;
-    protected Java2DFrameConverter imageConverter;
+    public static OpenCVFrameConverter.ToMat frameConverter = new OpenCVFrameConverter.ToMat();
+    public static Java2DFrameConverter imageConverter = new Java2DFrameConverter();
 
-    public ScreenConverter() {
-        frameConverter = new OpenCVFrameConverter.ToMat();
-        imageConverter = new Java2DFrameConverter();
-    }
-
-    public BufferedImage convert(opencv_core.Mat screen) {
+    public static BufferedImage convert(opencv_core.Mat screen) {
         return imageConverter.convert(frameConverter.convert(screen));
     }
 }

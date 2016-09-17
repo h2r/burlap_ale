@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by maroderi on 7/11/16.
+ * A BURLAP visual explorer for the ALE.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEVisualExplorer extends VisualExplorer {
 

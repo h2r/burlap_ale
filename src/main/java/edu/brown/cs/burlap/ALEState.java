@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by MelRod on 3/18/16.
+ * A BURLAP state for storing the Atari screen.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEState implements State {
 

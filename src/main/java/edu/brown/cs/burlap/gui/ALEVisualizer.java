@@ -9,7 +9,9 @@ import edu.brown.cs.burlap.screen.ScreenConverter;
 import java.awt.*;
 
 /**
- * Created by maroderi on 7/11/16.
+ * A BURLAP visualizer for ALE.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEVisualizer {
 
@@ -22,12 +24,9 @@ public class ALEVisualizer {
     }
 
     static class ALEStatePainter implements StatePainter {
-
-        ScreenConverter screenConverter = new ScreenConverter();
-
         @Override
         public void paint(Graphics2D g2, State s, float cWidth, float cHeight) {
-            g2.drawImage(screenConverter.convert(((ALEState) s).getScreen()), 0, 0, (int)cWidth, (int)cHeight, null);
+            g2.drawImage(ScreenConverter.convert(((ALEState) s).getScreen()), 0, 0, (int)cWidth, (int)cHeight, null);
         }
     }
 }

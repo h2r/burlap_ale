@@ -1,7 +1,9 @@
 package edu.brown.cs.burlap.io;
 
 /**
- * Created by maroderi on 8/1/16.
+ * The method for pooling over recent Atari frames.
+ *
+ * @author Melrose Roderick.
  */
 public enum PoolingMethod {
     POOLING_METHOD_NONE,

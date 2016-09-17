@@ -8,7 +8,9 @@ import edu.brown.cs.burlap.io.Actions;
 import java.util.Arrays;
 
 /**
- * Created by MelRod on 3/18/16.
+ * A BURLAP DomainGenerator for creating ALE domains with a specified subset of actions.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEDomainGenerator implements DomainGenerator {
 

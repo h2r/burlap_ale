@@ -4,7 +4,9 @@ import burlap.mdp.core.action.Action;
 import edu.brown.cs.burlap.io.Actions;
 
 /**
- * Created by maroderi on 7/11/16.
+ * A BURLAP action for ALE actions.
+ *
+ * @author Melrose Roderick.
  */
 public class ALEAction implements Action {
 
