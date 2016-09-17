@@ -318,6 +318,7 @@ public class ALEDriver {
         err = observe(frame);
         rlData.reward += this.rlData.reward;
         rlData.isTerminal |= this.rlData.isTerminal;
+        rlData.lives = this.rlData.lives;
 
         return err;
     }
@@ -363,6 +364,15 @@ public class ALEDriver {
         // Parse the terminal bit
         rlData.isTerminal = (Integer.parseInt(tokens[0]) == 1);
         rlData.reward = Integer.parseInt(tokens[1]);
+
+        // Set number of lives if available.
+        if (tokens.length > 2) {
+            rlData.lives = Integer.parseInt(tokens[2]);
+        }
+        // Otherwise, set to -1 for error reporting
+        else {
+            rlData.lives = -1;
+        }
     }
 
     /**

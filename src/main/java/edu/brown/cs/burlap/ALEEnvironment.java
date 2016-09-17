@@ -30,6 +30,10 @@ public class ALEEnvironment implements Environment {
     protected ALEState currentState;
     protected double lastReward;
     protected boolean isTerminal;
+    protected int currentLives = 0;
+
+    /** If true, mark every time a life is lost as a terminal state */
+    public boolean terminateOnEndLife = false;
 
     public ALEEnvironment(String alePath, String romPath) {
         this(alePath, romPath, 1, POOLING_METHOD_NONE);
@@ -78,6 +82,18 @@ public class ALEEnvironment implements Environment {
         isTerminal = rlData.isTerminal;
         currentState = new ALEState(screen);
 
+        if (terminateOnEndLife) {
+            if (rlData.isTerminal) {
+                isTerminal = true;
+                currentLives = 0;
+            } else if (rlData.lives != currentLives) {
+                isTerminal = true;
+                currentLives = rlData.lives;
+            }
+        } else {
+            isTerminal = rlData.isTerminal;
+        }
+
         return new EnvironmentOutcome(startState, a, currentState, lastReward, isInTerminalState());
     }
 
@@ -93,9 +109,26 @@ public class ALEEnvironment implements Environment {
 
     @Override
     public void resetEnvironment() {
-        // perform reset action
-        io.act(Actions.map("system_reset"));
-        isTerminal = false;
+        if (terminateOnEndLife) {
+            // Only reset ALE if the player has lost all of their lives
+            if (currentLives <= 0) {
+                // perform reset action
+                io.act(Actions.map("system_reset"));
+                RLData rlData = io.getRLData();
+                currentLives = rlData.lives;
+
+                // check if the number of lives was correctly recorded
+                if (currentLives == -1) {
+                    throw new RuntimeException("Cannot get the lives from this version of ALE. " +
+                            "If you want to enable 'terminateOnEndLife', you need to download our ALE fork: " +
+                            "https://github.com/h2r/Arcade-Learning-Environment");
+                }
+            }
+        } else {
+            // perform reset action
+            io.act(Actions.map("system_reset"));
+            isTerminal = false;
+        }
 
         // reset initialState
         currentState = new ALEState(io.getScreen());
