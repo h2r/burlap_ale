@@ -6,7 +6,11 @@ A BURLAP library extension for interacting with the Arcade Learning Environment 
 
 ALE is not included with this library extension and will need to be installed separately.
 
-The code can be found on the [ALE downloads page](http://www.arcadelearningenvironment.org/downloads/) or on their [GitHub repo](https://github.com/mgbellemare/Arcade-Learning-Environment).
+The current version of ALE does not give the number of lives data over the PIPE interface.
+So, if you want the ALEEnvironment to create a terminal state after the end of each life (as is done in Deepmind's DQN results),
+you will need to clone [our fork of ALE](https://github.com/h2r/Arcade-Learning-Environment).
+
+If you don't need this feature, vanilla ALE found on the [ALE downloads page](http://www.arcadelearningenvironment.org/downloads/) or on their [GitHub repo](https://github.com/mgbellemare/Arcade-Learning-Environment).
 
 Clone the code to your machine and follow the compilation code on their GitHub page (copied here):
 
