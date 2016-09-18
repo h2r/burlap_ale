@@ -25,6 +25,7 @@ public class ALEAction implements Action {
 
     public ALEAction(int aleCode) {
         this.aleCode = aleCode;
+        this.actionName = Actions.actionNames[aleCode];
     }
 
     @Override

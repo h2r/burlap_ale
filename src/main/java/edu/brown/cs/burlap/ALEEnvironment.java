@@ -91,7 +91,7 @@ public class ALEEnvironment implements Environment {
             isTerminal = rlData.isTerminal;
         }
 
-        return new EnvironmentOutcome(startState, a, currentState, lastReward, isInTerminalState());
+        return new EnvironmentOutcome(startState, a, currentState, lastReward, isTerminal);
     }
 
     @Override
@@ -108,24 +108,23 @@ public class ALEEnvironment implements Environment {
     public void resetEnvironment() {
         if (terminateOnEndLife) {
             // Only reset ALE if the player has lost all of their lives
-            if (currentLives <= 0) {
+            if (currentLives == 0) {
                 // perform reset action
                 io.act(Actions.map("system_reset"));
                 RLData rlData = io.getRLData();
                 currentLives = rlData.lives;
-
+            } else if (currentLives <= -1) {
                 // check if the number of lives was correctly recorded
-                if (currentLives == -1) {
-                    throw new RuntimeException("Cannot get the lives from this version of ALE. " +
-                            "If you want to enable 'terminateOnEndLife', you need to download our ALE fork: " +
-                            "https://github.com/h2r/Arcade-Learning-Environment");
-                }
+                throw new RuntimeException("Cannot get the lives from this version of ALE. " +
+                        "If you want to enable 'terminateOnEndLife', you need to download our ALE fork: " +
+                        "https://github.com/h2r/Arcade-Learning-Environment");
             }
         } else {
             // perform reset action
             io.act(Actions.map("system_reset"));
-            isTerminal = false;
         }
+
+        isTerminal = false;
 
         // reset initialState
         currentState = new ALEState(io.getScreen());
