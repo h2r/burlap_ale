@@ -12,6 +12,7 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import edu.brown.cs.burlap.io.PoolingMethod;
 
 import java.io.IOException;
+import java.util.Random;
 
 import static edu.brown.cs.burlap.io.PoolingMethod.*;
 
@@ -32,7 +33,13 @@ public class ALEEnvironment implements Environment {
     protected int currentLives = 0;
 
     /** If true, mark every time a life is lost as a terminal state */
-    public boolean terminateOnEndLife = false;
+    protected boolean terminateOnEndLife = false;
+
+    /** When resetting the environment, run a random number of (single-frame) no-ops between 0 and randomNoopMax */
+    protected int randomNoopMax = 0;
+
+    /** Random number generator used for random no-ops */
+    protected Random rng = new Random();
 
     public ALEEnvironment(String alePath, String romPath) {
         this(alePath, romPath, 1, POOLING_METHOD_NONE);
@@ -45,6 +52,18 @@ public class ALEEnvironment implements Environment {
     public ALEEnvironment(String alePath, String romPath, int frameSkip, PoolingMethod poolingMethod, String recordScreenDir) {
         // Create the relevant I/O objects
         initIO(alePath, romPath, frameSkip, poolingMethod, recordScreenDir);
+    }
+
+    public void setTerminateOnEndLife(boolean terminateOnEndLife) {
+        this.terminateOnEndLife = terminateOnEndLife;
+    }
+
+    public void setRandomNoopMax(int randomNoopMax) {
+        this.randomNoopMax = randomNoopMax;
+    }
+
+    public void setRandomSeed(long seed) {
+        rng.setSeed(seed);
     }
 
     @Override
@@ -110,7 +129,7 @@ public class ALEEnvironment implements Environment {
             // Only reset ALE if the player has lost all of their lives
             if (currentLives == 0) {
                 // perform reset action
-                io.act(Actions.map("system_reset"));
+                io.reset();
                 RLData rlData = io.getRLData();
                 currentLives = rlData.lives;
             } else if (currentLives <= -1) {
@@ -121,12 +140,19 @@ public class ALEEnvironment implements Environment {
             }
         } else {
             // perform reset action
-            io.act(Actions.map("system_reset"));
+            io.reset();
         }
 
-        isTerminal = false;
+        // Run a random number of no-ops
+        if (randomNoopMax > 0) {
+            int noops = rng.nextInt(randomNoopMax);
+            if (noops > 0) {
+                io.act(0, noops);
+            }
+        }
 
-        // reset initialState
+        // Reset state
+        isTerminal = false;
         currentState = new ALEState(io.getScreen());
     }
 

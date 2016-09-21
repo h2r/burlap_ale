@@ -241,7 +241,7 @@ public class ALEDriver {
         // Ignore blank lines (still send an action)
         if (line.length() > 0) {
             // The data format is:
-            // <ram-string>:<edu.brown.cs.burlap.screen-string>:<rl-data-string>:\n
+            // <ram-string>:<screen-string>:<rl-data-string>:\n
             //  Some of these elements may be missing, in which case the separating
             //  colons are not sent. For example, if we only want ram and rl data,
             //  the format is <ram>:<rl-data>:
@@ -278,39 +278,47 @@ public class ALEDriver {
 
     /** After a call to observe(), send back the necessary action.
      *
-     * @param act the code of the atari action to perform
+     * @param action the code of the atari action to perform
      * @return a boolean indicating if ALE has closed.
      */
-    public boolean act(int act) {
+    public boolean act(int action) {
+        return act(action, frameskip);
+    }
+    public boolean act(int action, int repeat) {
         // Ensure that we called observe() last
         if (!hasObserved) {
             throw new RuntimeException("act() called before observe().");
-        }
-        else
+        } else {
             hasObserved = false;
+        }
 
         boolean err = false;
-        if (frameskip <= 1) {
+        if (repeat <= 1) {
             // Swap frameA and B
             Mat frameC = frameA;
             frameA = frameB;
             frameB = frameC;
 
-            sendAction(act);
+            sendAction(action);
             err |= observe(frameA);
         } else {
             RLData rlData = new RLData();
-            for (int f = 0; f < frameskip - 2; f++) {
-                err |= actHelper(act, null, rlData);
+            for (int f = 0; f < repeat - 2; f++) {
+                err |= actHelper(action, null, rlData);
             }
-            err |= actHelper(act, frameB, rlData);
-            err |= actHelper(act, frameA, rlData);
+            err |= actHelper(action, frameB, rlData);
+            err |= actHelper(action, frameA, rlData);
 
             this.rlData = rlData;
         }
 
         poolFrames();
         return err;
+    }
+
+    public boolean reset() {
+        // Send reset twice to pool over the frames
+        return act(Actions.map("system_reset"), 2);
     }
 
     private boolean actHelper(int act, Mat frame, RLData rlData) {
@@ -347,7 +355,7 @@ public class ALEDriver {
      * Helper function to send out an action to ALE
      * @param act the action code to execute
      */
-    public void sendAction(int act) {
+    protected void sendAction(int act) {
         // Send player A's action, as well as the NOOP for player B
         // Format: <player_a_action>,<player_b_action>\n
         out.printf("%d,%d\n", act, 18);
@@ -358,7 +366,7 @@ public class ALEDriver {
      * Read in RL data from a given line.
      * @param line the line of data to parse
      */
-    public void readRLData(String line) {
+    protected void readRLData(String line) {
         // Parse RL data
         // Format: <is-terminal>:<reward>\n
         String[] tokens = line.split(",");
@@ -381,7 +389,7 @@ public class ALEDriver {
      * Reads the console RAM from a string
      * @param line The RAM-part of the string sent by ALE.
      */
-    public void readRam(String line) {
+    protected void readRam(String line) {
         int offset = 0;
 
         // Read in all of the RAM
@@ -400,7 +408,7 @@ public class ALEDriver {
      *
      * @param line The edu.brown.cs.burlap.screen part of the string sent by ALE.
      */
-    public void readScreenMatrix(String line, Mat frame) {
+    protected void readScreenMatrix(String line, Mat frame) {
         BytePointer screenData = frame.data();
         int position = 0;
 
@@ -443,7 +451,7 @@ public class ALEDriver {
      * Read in a run-length encoded edu.brown.cs.burlap.screen. ALE 0.3-0.4
      * @param line the line of data to read
      */
-    public void readScreenRLE(String line, Mat frame) {
+    protected void readScreenRLE(String line, Mat frame) {
 
         BytePointer screenData = frame.data();
         int position = 0;
