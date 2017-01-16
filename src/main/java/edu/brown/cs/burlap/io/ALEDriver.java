@@ -31,13 +31,13 @@ public class ALEDriver {
     protected Process process;
 
     /** Data structure holding the edu.brown.cs.burlap.screen image */
-    Mat screen;
+    protected Mat screen;
     /** Data structure holding the raw frame data. If pooling != 0, pool over these frames **/
-    Mat frameA;
-    Mat frameB;
-    PoolingMethod poolingMethod = PoolingMethod.POOLING_METHOD_NONE;
+    protected Mat frameA;
+    protected Mat frameB;
+    protected PoolingMethod poolingMethod = PoolingMethod.POOLING_METHOD_NONE;
     /** Data structure holding colors */
-    ColorPalette colorPalette = new NTSCPalette();
+    protected ColorPalette colorPalette = new NTSCPalette();
     /** Data structure holding the RAM data */
     protected ConsoleRAM ram;
     /** Data structure holding RL data */
@@ -190,7 +190,7 @@ public class ALEDriver {
      * @return the matrix for the screen
      */
     public Mat getScreen() {
-        return screen;
+        return screen.clone();
     }
 
     /** Returns the RAM from ALE.

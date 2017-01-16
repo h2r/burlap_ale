@@ -12,10 +12,15 @@ import java.awt.image.BufferedImage;
  * @author Melrose Roderick.
  */
 public class ScreenConverter {
-    public static OpenCVFrameConverter.ToMat frameConverter = new OpenCVFrameConverter.ToMat();
-    public static Java2DFrameConverter imageConverter = new Java2DFrameConverter();
+    protected OpenCVFrameConverter.ToMat frameConverter;
+    protected Java2DFrameConverter imageConverter;
 
-    public static BufferedImage convert(opencv_core.Mat screen) {
+    public ScreenConverter() {
+        frameConverter = new OpenCVFrameConverter.ToMat();
+        imageConverter = new Java2DFrameConverter();
+    }
+
+    public BufferedImage convert(opencv_core.Mat screen) {
         return imageConverter.convert(frameConverter.convert(screen));
     }
 }

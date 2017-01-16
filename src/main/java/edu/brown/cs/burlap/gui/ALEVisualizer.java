@@ -15,6 +15,8 @@ import java.awt.*;
  */
 public class ALEVisualizer {
 
+    protected static ScreenConverter converter = new ScreenConverter();
+
     private ALEVisualizer() {}
 
     public static Visualizer create() {
@@ -26,7 +28,7 @@ public class ALEVisualizer {
     static class ALEStatePainter implements StatePainter {
         @Override
         public void paint(Graphics2D g2, State s, float cWidth, float cHeight) {
-            g2.drawImage(ScreenConverter.convert(((ALEState) s).getScreen()), 0, 0, (int)cWidth, (int)cHeight, null);
+            g2.drawImage(converter.convert(((ALEState) s).getScreen()), 0, 0, (int)cWidth, (int)cHeight, null);
         }
     }
 }

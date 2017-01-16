@@ -5,7 +5,6 @@ import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.EnvironmentOutcome;
 import edu.brown.cs.burlap.io.ALEDriver;
-import edu.brown.cs.burlap.io.Actions;
 import edu.brown.cs.burlap.io.RLData;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
@@ -66,6 +65,10 @@ public class ALEEnvironment implements Environment {
         rng.setSeed(seed);
     }
 
+    public int getCurrentLives() {
+        return currentLives;
+    }
+
     @Override
     public State currentObservation() {
         return currentState;
@@ -108,6 +111,7 @@ public class ALEEnvironment implements Environment {
             }
         } else {
             isTerminal = rlData.isTerminal;
+            currentLives = rlData.lives;
         }
 
         return new EnvironmentOutcome(startState, a, currentState, lastReward, isTerminal);
